@@ -22,14 +22,10 @@ const Product = ({
   rating,
   category,
   supply,
-  stat, // Expecting stat as an array
+  stat,
 }) => {
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
-
-  // Extract the relevant stat object from the array (e.g., the first element)
-  const statData = stat && stat.length > 0 ? stat[0] : { yearlySalesTotal: 0, yearlyTotalSoldUnits: 0 };
-
   return (
     <Card
       sx={{
@@ -53,6 +49,7 @@ const Product = ({
           ${Number(price).toFixed(2)}
         </Typography>
         <Rating value={rating} readOnly />
+
         <Typography variant="body2">{description}</Typography>
       </CardContent>
       <CardActions>
@@ -76,10 +73,10 @@ const Product = ({
           <Typography>id: {_id}</Typography>
           <Typography>Supply Left: {supply}</Typography>
           <Typography>
-            Yearly Sales This Year: {statData.yearlySalesTotal ?? "N/A"}
+            Yearly Sales This Year: {stat?.yearlySalesTotal}
           </Typography>
           <Typography>
-            Yearly Units Sold This Year: {statData.yearlyTotalSoldUnits ?? "N/A"}
+            Yearly Units Sold This Year: {stat?.yearlyTotalSoldUnits}
           </Typography>
         </CardContent>
       </Collapse>
@@ -89,7 +86,7 @@ const Product = ({
 
 const Products = () => {
   const { data, isLoading } = useGetProductsQuery();
-  console.log(data) // Check data structure in console
+  // console.log(data)
   const isNonMobile = useMediaQuery("(min-width: 1000px)");
 
   return (
@@ -107,32 +104,23 @@ const Products = () => {
             "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
           }}
         >
-          {data && data?.map((product) => {
-            const {
-              _id,
-              name,
-              description,
-              price,
-              rating,
-              category,
-              supply,
-              stat,
-            } = product;
-
-            return (
+          {data?.map(
+            ({
+              value,
+            }) => (
               <Product
-                key={_id}
-                _id={_id}
-                name={name}
-                description={description}
-                price={price}
-                rating={rating}
-                category={category}
-                supply={supply}
-                stat={stat} // Pass stat array directly
+                key={value?._id}
+                _id={value?._id}
+                name={value?.name}
+                description={value?.description}
+                price={value?.price}
+                rating={value?.rating}
+                category={value?.category}
+                supply={value?.supply}
+                stat={value?.stat[0]}
               />
-            );
-          })}
+            )
+          )}
         </Box>
       ) : (
         <>Loading...</>
