@@ -54,6 +54,8 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@mui/x-data-grid": "^7.15.0"
+    "@mui/x-data-grid": "^7.15.0",
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4"
   }
 }
